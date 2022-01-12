@@ -56,43 +56,45 @@ public class SimulatedClock extends JFrame {
     }
 
     public void paint(Graphics g){
-        super.paint(g);
-        Rectangle rectangle = getBounds();
-        Insets insets = getInsets();
+        super.paint(g); //调用父类的paint()方法，这样在画图时能保存外观
+        Rectangle rectangle = getBounds(); //获取控件的区域
+        Insets insets = getInsets();  //获取控件的边框
         int radius = 120;
         int x = (rectangle.width - 2*radius - insets.right)/2 + insets.left;
         int y = (rectangle.height - 2 * radius - insets.top - insets.bottom) / 2 + insets.top;
         Point2D.Double center = new Point2D.Double(x +radius, y + radius);
-        g.drawOval(x,y,2*radius,2*radius);
+        g.drawOval(x,y,2*radius,2*radius); //绘制圆形
         Point2D.Double[] scales = new Point2D.Double[60];
-        double angle = Math.PI/30;
-        for(int i=0;i<scales.length;i++){
-            scales[i] = new Point2D.Double();
-            scales[i].setLocation(x + radius + radius * Math.sin(angle * i), y + radius - radius * Math.cos(angle * i));
+        double angle = Math.PI/30;  //表盘上两个点之间的夹角是PI/30
+        for(int i=0;i<scales.length;i++){  //获取所有刻度的坐标
+            scales[i] = new Point2D.Double();  //初始化点对象
+            scales[i].setLocation(x + radius + radius * Math.sin(angle * i), y + radius - radius * Math.cos(angle * i));  //利用三角函数计算点的坐标
         }
-        for(int i=0;i<scales.length;i++){
+        for(int i=0;i<scales.length;i++){ //画所有的刻度
             if(i % 5 ==0){
+                //如果序号是5，则画成大点，这些点相当于石英钟上的数字
                 g.setColor(Color.RED);
                 g.fillOval((int) scales[i].x-4,(int) scales[i].y-4,8,8);
             }else {
+                //如果序号不是5，则画成小点，这些点相当于石英钟上的小刻度
                 g.setColor(Color.CYAN);
                 g.fillOval((int) scales[i].x - 2, (int) scales[i].y - 2, 4, 4);
             }
         }
         Calendar calendar = new GregorianCalendar();
-        int hour = calendar.get(Calendar.HOUR);
-        int minute = calendar.get(Calendar.MINUTE);
-        int second = calendar.get(Calendar.SECOND);
+        int hour = calendar.get(Calendar.HOUR); //获取当前小时数
+        int minute = calendar.get(Calendar.MINUTE); //获取当前分钟数
+        int second = calendar.get(Calendar.SECOND); //获取当前秒数
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.RED);
-        g2d.draw(new Line2D.Double(center, scales[second]));
+        g2d.setColor(Color.RED); //将颜色设置成红色
+        g2d.draw(new Line2D.Double(center, scales[second])); //绘制秒针
         BasicStroke bs = new BasicStroke(3f,BasicStroke.CAP_ROUND,BasicStroke.JOIN_MITER);
         g2d.setColor(Color.BLUE);
-        g2d.draw(new Line2D.Double(center, scales[minute]));// »æÖÆ·ÖÕë
+        g2d.draw(new Line2D.Double(center, scales[minute]));// 绘制分针
         bs = new BasicStroke(6f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
         g2d.setStroke(bs);
         g2d.setColor(Color.GREEN);
-        g2d.draw(new Line2D.Double(center, scales[hour * 5 + minute / 12]));
+        g2d.draw(new Line2D.Double(center, scales[hour * 5 + minute / 12])); //绘制时针
     }
 
     private class ClockRunnable implements Runnable{
