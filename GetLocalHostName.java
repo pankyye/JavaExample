@@ -50,11 +50,11 @@ public class GetLocalHostName extends JFrame {
         button.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 try{
-                    InetAddress inetAddr = InetAddress.getLocalHost();
-                    String canonical = inetAddr.getCanonicalHostName();
-                    String host = inetAddr.getHostName();
-                    tf_canonical.setText(canonical);
-                    tf_host.setText(host);
+                    InetAddress inetAddr = InetAddress.getLocalHost(); //创建本地主机的InetAddress对象
+                    String canonical = inetAddr.getCanonicalHostName(); //获取本地主机的域名
+                    String host = inetAddr.getHostName(); //获取本地主机的主机名
+                    tf_canonical.setText(canonical); //在文本框中显示本地主机的域名
+                    tf_host.setText(host); //在文本框中显示本地主机的主机名
                 }catch (UnknownHostException e1){
                     e1.printStackTrace();
                 }
